@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+    color: #1e293b;
+  }
+
+  h1 {
+    text-align: center;
+    color: #2563eb;
+  }
+
+  #taskInput {
+    padding: 12px;
+    width: 65%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 10px 14px;
+    margin: 4px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #1d4ed8;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    background: white;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px #00000012;
+    overflow-wrap: anywhere;
+  }
+
+  li button:last-child {
+    background: #ef4444;
+  }
+
+  li button:last-child:hover {
+    background: #dc2626;
+  }
+</style><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My To-Do List</title>
+</head>
+<body>
+  <h1>My To-Do List</h1>
+ <input type="text" id="taskInput" placeholder="Enter a new task">
+<button onclick="addTask()">Add Task</button>
+<ul id="taskList"></ul>
+
+<script>
+  const taskList = document.getElementById("taskList");
+
+  function saveTasks() {
+    const tasks = [];
+
+    taskList.querySelectorAll("li").forEach(function(item) {
+      tasks.push({
+        text: item.querySelector("span").textContent,
+        done: item.querySelector("span").style.textDecoration === "line-through"
+      });
+    });
+
+    localStorage.setItem("todoTasks", JSON.stringify(tasks));
+  }
+
+  function createTask(text, done = false) {
+    const item = document.createElement("li");
+
+    const taskText = document.createElement("span");
+    taskText.textContent = text + " ";
+
+    if (done) {
+      taskText.style.textDecoration = "line-through";
+    }
+
+    const doneButton = document.createElement("button");
+    doneButton.textContent = "Done";
+    doneButton.onclick = function() {
+      taskText.style.textDecoration =
+        taskText.style.textDecoration === "line-through" ? "none" : "line-through";
+      saveTasks();
+    };
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = function() {
+      item.remove();
+      saveTasks();
+    };
+
+    item.appendChild(taskText);
+    item.appendChild(doneButton);
+    item.appendChild(deleteButton);
+    taskList.appendChild(item);
+
+    saveTasks();
+  }
+
+  function addTask() {
+    const input = document.getElementById("taskInput");
+    const task = input.value.trim();
+
+    if (task === "") return;
+
+    createTask(task);
+    input.value = "";
+  }
+
+  const savedTasks = JSON.parse(localStorage.getItem("todoTasks") || "[]");
+
+  savedTasks.forEach(function(task) {
+    createTask(task.text, task.done);
+  });
+</script></body>
+</html>
