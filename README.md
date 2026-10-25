@@ -29,3 +29,7 @@ This project was created as part of my web development learning journey and port
 ## Author
 
 GitHub: https://github.com/relax-tg
+
+## Screenshot
+
+![To-Do List Screenshot](screenshot.png)
